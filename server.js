@@ -3,6 +3,7 @@ const express = require('express');
 const pg = require('pg')
 const cors = require('cors');
 const superAgent = require('superagent');
+const methodOverride = require('method-override');
 const app = express();
 
 require('dotenv').config();
@@ -11,12 +12,13 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('./public'));
+app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 
 const PORT = process.env.PORT;
 
-// let client = new pg.Client(process.env.DATABASE_URL);
-const client = new pg.Client({ connectionString: process.env.DATABASE_URL,   ssl: { rejectUnauthorized: false } });
+let client = new pg.Client(process.env.DATABASE_URL);
+// const client = new pg.Client({ connectionString: process.env.DATABASE_URL,   ssl: { rejectUnauthorized: false } });
 
 
 
@@ -33,7 +35,7 @@ const googleAPI = 'https://www.googleapis.com/books/v1/volumes';
 
 function handleHome(req, res) {
     client.query('SELECT * FROM books').then(data => {
-      
+
         res.render('pages/index', { favBooks: data.rows })
     }).catch(error => {
         res.status(500).render('pages/error');
@@ -75,45 +77,44 @@ function handleSearches(req, res) {
         res.render('pages/searches/show', { arrayOfItems: booksArray });
 
     }).catch(error => {
-        res.status(500).send('there is an error    ', error);
+        res.status(500).send('there is an error ' + error);
     });
 }
 
 //===================Handle Books=====================
 
 function handleBooks(req, res) {
+    // console.log(req.body);
+    let reqBody = req.body;
+    let insertQuery = 'INSERT INTO books(author,title,isbn,image_url,description) VALUES ($1,$2,$3,$4,$5) RETURNING *;';
 
-    let reqBody =req.body;
-    let insertQuery= 'INSERT INTO books(author,title,isbn,image_url,description) VALUES ($1,$2,$3,$4,$5) RETURNING *;';
+    let safeValue = [reqBody.authors, reqBody.title, reqBody.isbn, reqBody.image, reqBody.description];
 
-    let safeValue= [reqBody.authors,reqBody.title,reqBody.isbn,reqBody.image,reqBody.description];
-
-    client.query(insertQuery,safeValue).then((data)=>{
+    client.query(insertQuery, safeValue).then((data) => {
         let id = data.rows[0].id;
         res.redirect(`/books/${id}`);
-    }).catch(error=>{
+    }).catch(error => {
         console.log(error)
         res.status(500).render('pages/error');
     });
-
 }
 
 //=====================Handle One Book===================
 
-function handleOneBook(req,res){
+function handleOneBook(req, res) {
     // console.log('gfkufh',req.params);
-    let id= req.params.id;
-    let selectQuery ='SELECT * FROM books WHERE id = $1';
+    let id = req.params.id;
+    let selectQuery = 'SELECT * FROM books WHERE id = $1';
     let safeValues = [id];
-    console.log(id);
+    // console.log(id);
 
-    client.query(selectQuery,safeValues).then(data=>{
+    client.query(selectQuery, safeValues).then(data => {
         // console.log(data);
-        res.render('pages/details',{ oneBook:data.rows[0]});
-    }).catch(error=>{
+        res.render('pages/details', { oneBook: data.rows[0] });
+    }).catch(error => {
         res.status(500).render('pages/error');
     });
-    
+
 
 }
 
@@ -139,8 +140,8 @@ function handleError(req, res) {
 
 client.connect().then(() => {
     app.listen(PORT, () => {
-      console.log('listening on port ', PORT);
+        console.log('listening on port ', PORT);
     });
-  }).catch((error) => {
+}).catch((error) => {
     res.status(500).render('pages/error');
-  });
+});
