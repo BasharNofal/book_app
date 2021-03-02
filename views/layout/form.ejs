@@ -1,0 +1,23 @@
+<fieldset id="">
+    <form action="/books/<%= oneBook.id%>?_method=PUT" method="POST">
+        <label for="title">Update title</label>
+        <input type="text" value="<%= oneBook.title%>" name="title">
+        <br>
+        <label for="authors">Update authors</label>
+        <input type="text" value="<%= oneBook.authors%>" name="authors">
+        <br>
+        <label for="description">Update description</label>
+        <input type="text" value="<%= oneBook.description%>" name="description">
+        <br>
+        <label for="isbn">Update isbn</label>
+        <input type="text" value="<%= oneBook.type%>" name="isbn">
+        <br>
+        <label for="image">Update Image</label>
+        <input type="text" value="<%= oneBook.thumbnail%>" name="image">
+        <br>
+        <button type='submit'>Update Book</button>
+    </form>
+    <form action="/books/<%=oneBook.id%>?_method=DELETE" method="POST">
+        <button type = submit id="delete-book">Delete Book</button>
+    </form>
+</fieldset>
