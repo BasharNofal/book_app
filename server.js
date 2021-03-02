@@ -63,13 +63,14 @@ function handleSearches(req, res) {
         let booksArray = [];
         data.body.items.map((value) => {
 
-            let imgURL = value.volumeInfo.imageLinks.thumbnail.replace('http://', 'https://');
-            let title = value.volumeInfo.title;
-            let isbn = value.volumeInfo.industryIdentifiers[0].identifier;
-            let authors = value.volumeInfo.authors;
-            let description = value.volumeInfo.description;
+            // console.log(value.volumeInfo);
+            // let imgURL = value.volumeInfo;
+            // let title = value.volumeInfo.title;
+            // let isbn = value.volumeInfo;
+            // let authors = value.volumeInfo.authors;
+            // let description = value.volumeInfo;
 
-            let booksObject = new Book(imgURL, title, isbn, authors, description);
+            let booksObject = new Book(value.volumeInfo);
 
             booksArray.push(booksObject);
         });
@@ -77,6 +78,7 @@ function handleSearches(req, res) {
         res.render('pages/searches/show', { arrayOfItems: booksArray });
 
     }).catch(error => {
+        console.log(error);
         res.status(500).send('there is an error ' + error);
     });
 }
@@ -114,18 +116,29 @@ function handleOneBook(req, res) {
     }).catch(error => {
         res.status(500).render('pages/error');
     });
-
-
 }
 
 //====================Book Constructor=======================
 
-function Book(imgURL, title, isbn, authors, description) {
-    this.thumbnail = imgURL || 'https://i.imgur.com/J5LVHEL.jpg';
-    this.title = title || 'there is no title';
-    this.type = `ISBN: ${isbn}` || 'not found';
-    this.authors = authors || 'No authors are founded';
-    this.description = description || 'No description was found';
+function Book(data) {
+    if (data.thumbnail) {
+        this.thumbnail = data.imageLinks.thumbnail;
+    } else {
+        this.thumbnail = 'https://www.freeiconspng.com/uploads/book-icon--icon-search-engine-6.png';
+    }
+    this.title = data.title || 'there is no title';
+    if (data.industryIdentifiers) {
+        this.type = data.industryIdentifiers[0].identifier;
+    } else {
+        this.type = 'not found';
+    }
+    // console.log(this.type);
+    this.authors = data.authors || 'No authors are founded';
+    if (data.description) {
+        this.description = data.description;
+    } else {
+        this.description = 'No description was found';
+    }
 }
 
 //======================Handle Errors=======================
