@@ -27,19 +27,7 @@ h1,h3 {
 button {
     padding: 2%;
     font-size: 110%;
-    background-color: rgb(39, 3, 3);
-    color: white;
 }
-
-button:hover{
-    opacity: 0.95;
-}
-
-a:link ,a:visited{
-   text-decoration: none; 
-   color:white; 
-}
-
 
 
 .radio label, .radio input {
@@ -54,29 +42,31 @@ a:link ,a:visited{
     border-radius: 3px;
 }
 
-/*///////////////////// SHOW.EJS//////////////////  */
+.article-overflow{
+    height: 40px;
+    overflow-x: auto;
+}
+
+/*///////////////////// SHOW.EJS////////////////////*/
 
 img {
     margin: 4%;
+    height: 140%;
+    width: 40%;
 }
 
 .description,.title-and-author {
     margin: 2%;
+    margin-top: 20%;
 }
 
 .container {
     height: 80%;
     grid-template-rows: 40% 20% 40%;
     row-gap: 0;
-    background-color: wheat ;
-    opacity: 1;
 }
 
-/* ul {
-    list-style: ;
-} */
-
-
+/*/////////////////////// ERROR.EJS /////////////////////*/
 
 .error{
     height: 25%;
@@ -87,7 +77,6 @@ img {
     border-radius: 15%;
     margin:auto;
     display: block;
-    
     
 }
 

@@ -3,47 +3,49 @@
 
 
 <body>
-    <%- include('../layout/head')  %>
-    <%- include('../layout/header')  %>
-    <div class="container">
-        <div class="image">
-            <img src="<%= oneBook.image_url%>" alt="">
-        </div>
-        <div class="title-and-author">
-            <h3>
-                <%= oneBook.title%>
-            </h3>
-            <ul>
+    <%- include('../layout/head') %>
+        <%- include('../layout/header') %>
+            <div class="container">
+                <div class="image">
+                    <img src="<%= oneBook.image_url%>" alt="">
+                </div>
+                <div class="title-and-author">
+                    <h3>
+                        <%= oneBook.title%>
+                    </h3>
+                    <ul>
 
-                <li>
-                    <%= oneBook.author%>
-                </li>
+                        <li>
+                            <%= oneBook.author%>
+                        </li>
 
-            </ul>
-        </div>
+                    </ul>
+                </div>
 
-        <div class="description">
-            <p>
-                <%= oneBook.description%>
-                <br>
-                <br>
-                <%= oneBook.isbn%>
-            </p>
+                <div class="description">
+                    <section>
+                       <p class="article-overflow"><%= oneBook.description%></p> 
+                            <br>
+                            <br>
+                            <p><%= oneBook.isbn%></p>
+                    </section>
+                </div>
+                <div id="buttons">
+                    <%- include('../layout/form') %>
+                </div>
+            </div>
 
-            
-        </div>
-    </div>
+            <script>
+                function myFunction() {
+                    var x = document.getElementById("myLinks");
+                    if (x.style.display === "block") {
+                        x.style.display = "none";
+                    } else {
+                        x.style.display = "block";
+                    }
+                }
 
-    <script>
-        function myFunction() {
-          var x = document.getElementById("myLinks");
-          if (x.style.display === "block") {
-            x.style.display = "none";
-          } else {
-            x.style.display = "block";
-          }
-        }
-    </script>
+            </script>
 </body>
 
 </html>
